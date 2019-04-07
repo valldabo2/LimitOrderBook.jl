@@ -1,0 +1,2 @@
+BUY = true
+SELL = false

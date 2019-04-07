@@ -1,9 +1,12 @@
-using Example
-if VERSION < v"0.7.0-DEV.2005"
-    using Base.Test
-else
-    using Test
+using LimitOrderBook
+using Test
+using Base
+
+@testset "LimitOrderBook" begin
+    include("order.jl")
+    include("pricelevel.jl")
+    include("pricelevels.jl")
+    include("orderbook.jl")
 end
 
-@test hello("Julia") == "Hello, Julia"
-@test domath(2.0) ≈ 7.0
+

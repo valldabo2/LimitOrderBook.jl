@@ -1,7 +1,7 @@
-using Documenter, Example
+using Documenter, LimitOrderBook
 
-makedocs(modules = [Example], sitename = "Example.jl")
+makedocs(modules = [LimitOrderBook], sitename = "LimitOrderBook.jl")
 
 deploydocs(
-    repo = "github.com/JuliaLang/Example.jl.git",
+    repo = "github.com/JuliaLang/LimitOrderBook.jl.git",
 )

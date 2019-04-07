@@ -1,7 +1,7 @@
-Example Julia package repo.
+LimitOrderBook Julia package repo.
 
-[![Example](http://pkg.julialang.org/badges/Example_0.6.svg)](http://pkg.julialang.org/?pkg=Example)
-[![Example](http://pkg.julialang.org/badges/Example_0.7.svg)](http://pkg.julialang.org/?pkg=Example)
+[![LimitOrderBook](http://pkg.julialang.org/badges/LimitOrderBook_0.6.svg)](http://pkg.julialang.org/?pkg=LimitOrderBook)
+[![LimitOrderBook](http://pkg.julialang.org/badges/LimitOrderBook_0.7.svg)](http://pkg.julialang.org/?pkg=LimitOrderBook)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://JuliaLang.github.io/Example.jl/stable)
 [![](https://img.shields.io/badge/docs-dev-blue.svg)](https://JuliaLang.github.io/Example.jl/dev)
 

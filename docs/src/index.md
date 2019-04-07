@@ -1,7 +1,7 @@
-# Example
+# LimitOrderBook
 
-Example Julia package repo.
+LimitOrderBook Julia package repo.
 
 ```@autodocs
-Modules = [Example]
+Modules = [LimitOrderBook]
 ```
