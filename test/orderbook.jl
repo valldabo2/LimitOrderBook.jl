@@ -1,64 +1,79 @@
 @testset "OrderBook" begin
 
-    max_price = UInt128(100)
-    min_price = UInt128(1)
-    orderbook = OrderBook(max_price, min_price)
-    order_id_expected = UInt128(0)
 
-    @testset "Insert Buy orders" begin 
-        
-        for p in 1:20
+    @testset "Passive Orders" begin
+        max_price = UInt128(100)
+        min_price = UInt128(1)
+        orderbook = OrderBook(max_price, min_price)
+        order_id_expected = UInt128(0)
 
-            price = UInt128(p)
-            size = UInt128(10)
-            trader_id = UInt128(1)
-            side = BUY # Buy
-            trades, order_id = limitorder!(orderbook, side,
-                                       price, size, trader_id)
+        @testset "Insert Buy orders" begin 
+            
+            for p in 1:20
 
-            # Check order_id
-            order_id_expected = order_id_expected + 1
-            @test order_id == order_id_expected
+                price = UInt128(p)
+                size = UInt128(10)
+                trader_id = UInt128(1)
+                side = BUY # Buy
+                trades, order_id = limitorder!(orderbook, side,
+                                               price, size, trader_id)
 
-            # Check bid and bid size
-            bid = best_bid(orderbook)
-            @test bid == price
-            bid_size = best_bid_size(orderbook)
-            @test bid_size == size
+                # Check order_id
+                order_id_expected = order_id_expected + 1
+                @test order_id == order_id_expected
+
+                # Check bid and bid size
+                bid = best_bid(orderbook)
+                @test bid == price
+                bid_size = best_bid_size(orderbook)
+                @test bid_size == size
 
 
-        end
-
-    end
-
-    @testset "Insert Sell orders" begin 
-
-        for p in 100:-1:80
-
-            price = UInt128(p)
-            size = UInt128(10)
-            trader_id = UInt128(1)
-            side = SELL # Buy
-            trades, order_id = limitorder!(orderbook, side,
-                                       price, size, trader_id)
-
-            # Check order_id
-            order_id_expected = order_id_expected + 1
-            @test order_id == order_id_expected
-
-            # Check bid and bid size
-            ask = best_ask(orderbook)
-            @test ask == price
-            ask_size = best_ask_size(orderbook)
-            @test ask_size == size
-
+            end
 
         end
 
+        @testset "Insert Sell orders" begin 
+
+            for p in 100:-1:80
+
+                price = UInt128(p)
+                size = UInt128(10)
+                trader_id = UInt128(1)
+                side = SELL # Buy
+                trades, order_id = limitorder!(orderbook, side,
+                                               price, size, trader_id)
+
+                # Check order_id
+                order_id_expected = order_id_expected + 1
+                @test order_id == order_id_expected
+
+                # Check bid and bid size
+                ask = best_ask(orderbook)
+                @test ask == price
+                ask_size = best_ask_size(orderbook)
+                @test ask_size == size
+
+
+            end
+
+        end
     end
 
-    println(best_ask(orderbook))
-    println(best_bid(orderbook))
+    # @testset "Aggressive Orders" begin
+    #     max_price = UInt128(100)
+    #     min_price = UInt128(1)
+    #     orderbook = OrderBook(max_price, min_price)
+    #     order_id_expected = UInt128(0)
+
+    #     @testset "Buy Order" begin
+
+    #         # Place passive sell order
+    #         limitorder!(orderbook, SELL, UInt128(10), UInt128(100), UInt128(1))
+    #         # Match sell order
+    #         trades, order_id = limitorder!(orderbook, BUY, UInt128(10),
+    #                                        UInt128(10), UInt128(2))
+    #     end
 
     #trades = marketorder!(orderbook, side, size, trader_id)
 

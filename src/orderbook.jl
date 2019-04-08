@@ -1,3 +1,5 @@
+import DataStructures: Deque
+
 mutable struct OrderBook
     price_levels::PriceLevels
     order_id::UInt128 # Does it need to be this big?
@@ -8,6 +10,21 @@ end
 
 function limitorder!(ob::OrderBook, side::Bool, price::UInt128,
                      size::UInt128, trader_id::UInt128)                                          
+    # Init trades
+    trades = Deque{LimitOrder}()
+
+    # Matching
+    if side == BUY
+        ask = best_ask(ob)
+        while price >= ask & size > 0
+            price_level = get_level(ob, ask)
+            trades, size = match!(price_level, size, trades)
+            if size(price_level) == 0
+                ask = update_ask!(obs)
+            end
+        end
+    end
+
     # After Matching, just input the limit order
     ob.order_id = ob.order_id + 1
     order = LimitOrder(price, size, trader_id, side, ob.order_id)
@@ -54,4 +71,4 @@ function best_ask_size(ob::OrderBook)::UInt128
     ask = best_ask(ob)
     return size(ob.price_levels.levels[ask])
 end
- 7
+
