@@ -16,24 +16,25 @@ function limitorder!(ob::OrderBook, side::Bool, price::UInt128,
     # Matching
     if side == BUY
         ask = best_ask(ob)
-        while price >= ask & size > 0
-            price_level = get_level(ob, ask)
+        while (price >= ask) & (size > 0)
+            price_level = get_level(ob.price_levels, ask)
             trades, size = match!(price_level, size, trades)
-            if size(price_level) == 0
-                ask = update_ask!(obs)
+            if price_level.size == 0
+                ask = update_ask!(ob.price_levels)
             end
         end
     end
 
-    # After Matching, just input the limit order
-    ob.order_id = ob.order_id + 1
-    order = LimitOrder(price, size, trader_id, side, ob.order_id)
+    if size > 0
+        # After Matching, just input the limit order
+        ob.order_id = ob.order_id + 1
+        order = LimitOrder(price, size, trader_id, side, ob.order_id)
 
-    # Input order
-    insert_order!(ob.price_levels, order)
+        # Input order
+        insert_order!(ob.price_levels, order)
+    end
 
-
-    return 0, ob.order_id
+    return trades, ob.order_id
 end
 
 function marketorder!(ob::OrderBook, side::Bool, size::UInt128,

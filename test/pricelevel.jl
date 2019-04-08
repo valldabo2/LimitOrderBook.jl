@@ -69,8 +69,20 @@ import DataStructures: Deque
         #push!(expected_trades, o1)
         #@test trades === expected_trades
         # The entire sized was matched
+
         @test size == 0
-        @test Int(pl.size) == 20
+        @test pl.size == 20
+        
+        trades, size = match!(pl, UInt128(15), trades)
+
+        @test size == 0
+        @test pl.size == 5
+
+        trades, size = match!(pl, UInt128(10), trades)
+
+        @test size == 5
+        @test pl.size == 0
+
     end
 
 end

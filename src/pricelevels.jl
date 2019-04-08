@@ -47,4 +47,7 @@ function insert_order!(pls::PriceLevels, order::LimitOrder)
 
 end
 
+function get_level(pls::PriceLevels, price::UInt128)::PriceLevel
+    return pls.levels[Int(price)]
+end
 

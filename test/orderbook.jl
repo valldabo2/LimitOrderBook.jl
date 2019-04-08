@@ -60,20 +60,24 @@
         end
     end
 
-    # @testset "Aggressive Orders" begin
-    #     max_price = UInt128(100)
-    #     min_price = UInt128(1)
-    #     orderbook = OrderBook(max_price, min_price)
-    #     order_id_expected = UInt128(0)
+    @testset "Aggressive Orders" begin
+        max_price = UInt128(100)
+        min_price = UInt128(1)
+        orderbook = OrderBook(max_price, min_price)
+        order_id_expected = UInt128(0)
 
-    #     @testset "Buy Order" begin
+        @testset "Buy Order" begin
 
-    #         # Place passive sell order
-    #         limitorder!(orderbook, SELL, UInt128(10), UInt128(100), UInt128(1))
-    #         # Match sell order
-    #         trades, order_id = limitorder!(orderbook, BUY, UInt128(10),
-    #                                        UInt128(10), UInt128(2))
-    #     end
+            # Place passive sell order
+            limitorder!(orderbook, SELL, UInt128(10), UInt128(100), UInt128(1))
+            # Match sell order
+            trades, order_id = limitorder!(orderbook, BUY, UInt128(10),
+                                           UInt128(10), UInt128(2))
+
+            println(trades)
+        end
+
+    end
 
     #trades = marketorder!(orderbook, side, size, trader_id)
 

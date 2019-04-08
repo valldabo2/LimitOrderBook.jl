@@ -36,14 +36,16 @@ function DataStructures.first(pl::PriceLevel)
     return DataStructures.first(pl.orders).second
 end
 
-function match!(pl::PriceLevel, size::UInt128, trades::Deque{LimitOrder})
+function match!(pl::PriceLevel, size::UInt128, trades::Deque{LimitOrder})::Tuple{Deque{LimitOrder}, UInt128}
     # Matches the size to the price level
-    for order in values(pl.orders)
-        diff = order.size - size
+    #for order in values(pl.orders)
+    while pl.size > 0
+        order = first(values(pl.orders))
+        diff = Int128(order.size) - Int128(size)
         # Current limit order is larger than ordered size
         if diff > 0
-            order.size = order.size - diff
-            pl.size = pl.size - diff
+            order.size = order.size - size
+            pl.size = pl.size - size
             push!(trades, LimitOrder(order.price, diff, order.trader_id,
                                      order.side, order.order_id))
             return trades, 0
@@ -52,10 +54,10 @@ function match!(pl::PriceLevel, size::UInt128, trades::Deque{LimitOrder})
             push!(trades, order)
             size = size - order.size
             pl.size = pl.size - order.size
-            if diff == 0
-                pop!(pl.orders)
+            pop!(pl.orders)
+            if (pl.size == 0) | (diff == 0)
+                return trades, size
             end
-            return trades, size
         end
     end
 end
