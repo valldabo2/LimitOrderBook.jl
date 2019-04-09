@@ -46,7 +46,7 @@ function match!(pl::PriceLevel, size::UInt128, trades::Deque{LimitOrder})::Tuple
         if diff > 0
             order.size = order.size - size
             pl.size = pl.size - size
-            push!(trades, LimitOrder(order.price, diff, order.trader_id,
+            push!(trades, LimitOrder(order.price, size, order.trader_id,
                                      order.side, order.order_id))
             return trades, 0
         # Current limit order is smaller or equal to than ordered size
@@ -61,3 +61,12 @@ function match!(pl::PriceLevel, size::UInt128, trades::Deque{LimitOrder})::Tuple
         end
     end
 end
+
+function amount(trades::Deque{LimitOrder})::UInt128
+    a::UInt128 = 0
+    for order in trades
+        a += order.size*order.price
+    end
+    return a
+end
+

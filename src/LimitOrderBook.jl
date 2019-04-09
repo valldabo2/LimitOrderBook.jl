@@ -8,6 +8,8 @@ export best_bid, best_bid_size
 export best_ask, best_ask_size
 export match!
 export get_level
+export amount
+export insert_order!
 
 include("constants.jl")
 include("order.jl")

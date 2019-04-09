@@ -4,11 +4,13 @@ mutable struct PriceLevels
     levels::Array{PriceLevel, 1}
     ask::UInt128
     bid::UInt128
+    max_price::UInt128
+    min_price::UInt128
 
     function PriceLevels(max_price::UInt128, min_price::UInt128)
         n_prices = max_price - min_price + 1
         new(Array{PriceLevel, 1}(undef, n_prices), max_price,
-            min_price)
+            min_price, max_price, min_price)
     end
 end
 
@@ -49,5 +51,22 @@ end
 
 function get_level(pls::PriceLevels, price::UInt128)::PriceLevel
     return pls.levels[Int(price)]
+end
+
+function update_ask!(pls::PriceLevels)
+    ask = pls.ask + 1
+    for ask in pls.ask + 1:pls.max_price
+        if isdefined(pls.levels, Int(ask))
+            println(ask)
+            println(pls.levels[Int(ask)].size)
+            if pls.levels[Int(ask)].size > 0
+                pls.ask = ask
+                return ask
+            end
+        end
+
+    end
+    pls.ask = ask
+    return ask
 end
 

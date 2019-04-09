@@ -1,16 +1,11 @@
 @testset "OrderBook" begin
-
-
     @testset "Passive Orders" begin
         max_price = UInt128(100)
         min_price = UInt128(1)
         orderbook = OrderBook(max_price, min_price)
         order_id_expected = UInt128(0)
-
         @testset "Insert Buy orders" begin 
-            
             for p in 1:20
-
                 price = UInt128(p)
                 size = UInt128(10)
                 trader_id = UInt128(1)
@@ -27,16 +22,10 @@
                 @test bid == price
                 bid_size = best_bid_size(orderbook)
                 @test bid_size == size
-
-
             end
-
         end
-
         @testset "Insert Sell orders" begin 
-
             for p in 100:-1:80
-
                 price = UInt128(p)
                 size = UInt128(10)
                 trader_id = UInt128(1)
@@ -53,10 +42,7 @@
                 @test ask == price
                 ask_size = best_ask_size(orderbook)
                 @test ask_size == size
-
-
             end
-
         end
     end
 
@@ -67,16 +53,36 @@
         order_id_expected = UInt128(0)
 
         @testset "Buy Order" begin
-
             # Place passive sell order
             limitorder!(orderbook, SELL, UInt128(10), UInt128(100), UInt128(1))
             # Match sell order
             trades, order_id = limitorder!(orderbook, BUY, UInt128(10),
                                            UInt128(10), UInt128(2))
 
-            println(trades)
-        end
+            @test amount(trades) == 10*10
 
+            trades, order_id = limitorder!(orderbook, BUY, UInt128(11),
+                                           UInt128(40), UInt128(2))
+
+            @test amount(trades) == 10*40
+
+            # Not there exists 50 left of the sell order
+            ask = best_ask(orderbook)
+            ask_volume = best_ask_size(orderbook)
+            @test ask == 10
+            @test ask_volume == 50
+
+            # We insert another sell order at price 11
+            limitorder!(orderbook, SELL, UInt128(11), UInt128(100), UInt128(1))
+
+            # If we place a buy order at 11 for 151 we should get 50 for 10 and
+            # 100 for 11
+            trades, order_id = limitorder!(orderbook, BUY, UInt128(11),
+                                           UInt128(151), UInt128(2))
+            
+            @test amount(trades) == 10*50 + 11*100
+            println(best_ask(orderbook))
+        end
     end
 
     #trades = marketorder!(orderbook, side, size, trader_id)

@@ -32,9 +32,11 @@ function limitorder!(ob::OrderBook, side::Bool, price::UInt128,
 
         # Input order
         insert_order!(ob.price_levels, order)
-    end
 
-    return trades, ob.order_id
+        return trades, ob.order_id
+    else
+        return trades, nothing
+    end
 end
 
 function marketorder!(ob::OrderBook, side::Bool, size::UInt128,
