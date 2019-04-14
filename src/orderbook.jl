@@ -23,6 +23,16 @@ function limitorder!(ob::OrderBook, side::Bool, price::UInt128,
                 ask = update_ask!(ob.price_levels)
             end
         end
+    # Matches a sell order to buy orders
+    else
+        bid = best_bid(ob)
+        while (price <= bid) & (size > 0)
+            price_level = get_level(ob.price_levels, bid)
+            trades, size = match!(price_level, size, trades)
+            if price_level.size == 0
+                bid = update_bid!(ob.price_levels)
+            end
+        end
     end
 
     if size > 0
@@ -62,7 +72,7 @@ end
 
 function best_bid_size(ob::OrderBook)::UInt128
     bid = best_bid(ob)
-    return size(ob.price_levels.levels[bid])
+    return size(get_level(ob.price_levels, bid))
 end
 
 
@@ -72,6 +82,6 @@ end
 
 function best_ask_size(ob::OrderBook)::UInt128
     ask = best_ask(ob)
-    return size(ob.price_levels.levels[ask])
+    return size(get_level(ob.price_levels, ask))
 end
 
