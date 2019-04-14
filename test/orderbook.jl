@@ -111,16 +111,40 @@
             @test bid == 10
             @test bid_volume == 50
 
-            # # We insert another sell order at price 11
-            # limitorder!(orderbook, BUY, UInt128(11), UInt128(100), UInt128(1))
+            # We insert another buy order at price 9
+            limitorder!(orderbook, BUY, UInt128(9), UInt128(100), UInt128(1))
 
-            # # If we place a sell order at 11 for 151 we should get 50 for 10 and
-            # # 100 for 11
-            # trades, order_id = limitorder!(orderbook, SELL, UInt128(11),
-            #                                UInt128(151), UInt128(2))
+            # If we place a sell order at 9 for 151 we should get 50 for 10 and
+            # 100 for 9
+            trades, order_id = limitorder!(orderbook, SELL, UInt128(9),
+                                           UInt128(151), UInt128(2))
             
-            # @test amount(trades) == 10*50 + 11*100
+            @test amount(trades) == 10*50 + 9*100
         end
+
+        @testset "Aggressive limit order becomes bid and ask" begin
+            max_price = UInt128(15)
+            min_price = UInt128(7)
+            orderbook = OrderBook(max_price, min_price)
+            # Place passive sell order to me matched with
+            limitorder!(orderbook, SELL, UInt128(10), UInt128(10), UInt128(1))
+            # Matches with this order and adds as a passive buy order
+            trades, order_id = limitorder!(orderbook, BUY, UInt128(11), UInt128(20),
+                                           UInt128(2))
+            @test amount(trades) == 10*10
+            @test best_bid(orderbook) == 11
+            @test best_bid_size(orderbook) == 10
+            @test best_ask(orderbook) == max_price
+
+            # Places aggressive sell order that becomes passive
+            trades, order_id = limitorder!(orderbook, SELL, UInt128(9), UInt128(20),
+                                           UInt128(1))
+            @test amount(trades) == 11*10
+            @test best_ask(orderbook) == 9
+            @test best_ask_size(orderbook) == 10
+            @test best_bid(orderbook) == min_price
+        end
+
  
     end
 
