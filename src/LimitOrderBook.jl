@@ -10,6 +10,7 @@ export match!
 export get_level
 export amount
 export insert_order!
+export cancel!
 
 include("constants.jl")
 include("order.jl")

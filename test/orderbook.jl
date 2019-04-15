@@ -1,4 +1,46 @@
 @testset "OrderBook" begin
+
+    @testset "Cancel orders" begin
+        max_price = UInt128(110)
+        min_price = UInt128(90)
+        orderbook = OrderBook(max_price, min_price)
+
+        trades, order_id = limitorder!(orderbook, BUY, UInt128(100), UInt128(100), UInt128(1))
+
+        cancel!(orderbook, order_id)
+        @test best_bid(orderbook) == 90
+        @test best_ask(orderbook) == 110
+
+        trades, order_id = limitorder!(orderbook, SELL, UInt128(100),
+                                       UInt128(100), UInt128(1))
+
+        cancel!(orderbook, order_id)
+        @test best_bid(orderbook) == 90
+        @test best_ask(orderbook) == 110
+
+
+    end
+
+    @testset "Update orders" begin
+
+        max_price = UInt128(110)
+        min_price = UInt128(90)
+        orderbook = OrderBook(max_price, min_price)
+
+        trades, order_id = limitorder!(orderbook, BUY, UInt128(100), UInt128(100),
+                                       UInt128(1))
+
+        update!(orderbook, order_id, UInt128(50))
+        @test best_bid_size(orderbook) == 50
+
+        trades, order_id = limitorder!(orderbook, SELL, UInt128(101), UInt128(100),
+                                       UInt128(1))
+
+        update!(orderbook, order_id, UInt128(20))
+        @test best_ask_size(orderbook) == 20 
+    end
+
+
     @testset "Passive Orders" begin
         max_price = UInt128(100)
         min_price = UInt128(1)
@@ -144,15 +186,6 @@
             @test best_ask_size(orderbook) == 10
             @test best_bid(orderbook) == min_price
         end
-
- 
     end
-
-    #trades = marketorder!(orderbook, side, size, trader_id)
-
-    #cancel!(orderbook, order_id)
-
-    #update!(orderbook, order_id, size)
-
 end
 

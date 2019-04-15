@@ -10,11 +10,11 @@ mutable struct PriceLevels
     function PriceLevels(max_price::UInt128, min_price::UInt128)
         n_prices = max_price - min_price + 1
         new(Array{PriceLevel, 1}(undef, n_prices), max_price,
-            min_price, max_price, min_price)
+            min_price, max_price, min_price)::PriceLevels
     end
 end
 
-function Base.size(pls::PriceLevels)
+function Base.size(pls::PriceLevels)::Tuple{UInt128}
     return size(pls.levels)
 end
 
