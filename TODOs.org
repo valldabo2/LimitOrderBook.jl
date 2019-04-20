@@ -1,2 +1,13 @@
 * TODO Finish tests of price level
 * TODO Finish tests of price levels 
+
+* CUrrent status and next steps
+  to run the code do the following
+  1. Open a julia repl - spc m r
+  2. insert ] to get to pkg
+  3. Activate project with - activate ..
+  4. Run tests - test
+     
+  Next steps?
+  Create more tests or make an environment
+  Upload it to julia pkges

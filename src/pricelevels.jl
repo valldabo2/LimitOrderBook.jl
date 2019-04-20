@@ -1,5 +1,6 @@
 using Base
 
+
 mutable struct PriceLevels
     levels::Array{PriceLevel, 1}
     ask::UInt128
@@ -38,7 +39,6 @@ function insert_order!(pls::PriceLevels, order::LimitOrder)
         # Assert price lower than ask, might be removed
         @assert order.price < pls.ask "Inserted buy order with larger price than current ask"
         
-       
         add!(get_level(pls, order.price), order)
 
         if order.price > pls.bid
